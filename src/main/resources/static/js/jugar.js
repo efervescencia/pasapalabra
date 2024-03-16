@@ -24,6 +24,9 @@ function iniciar(){
     pos = 0;
     estado = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
     dibujar();
+    window.addEventListener('resize', resizeCanvas, false);
+    // Call resizeCanvas once to initially size and draw the canvas
+    resizeCanvas();
     //dibujar_tiempo(tiempo);
     //poner_datos_login();
     //records();
@@ -91,66 +94,96 @@ function iniciar(){
     }
     
     
-        function dibujar(){
-       //Recibimos el elemento canvas
-       var elemento = document.getElementById('canvas_id');
-       //Comprobacion sobre si encontramos un elemento
-       //y podemos extraer su contexto con getContext(), que indica compatibilidad con canvas
-       if (elemento && elemento.getContext) {
-          //Accedo al contexto de '2d' de este canvas, necesario para dibujar
-          var contexto = elemento.getContext('2d');
-          if (contexto) {
-             //Si tengo el contexto 2d es que todo ha ido bien y puedo empezar a dibujar en el canvas
-            
-            contexto.fillStyle = '#000000';
-            contexto.font = '24px "Tahoma"';
-            contexto.textAlign = "center";
-            contexto.textBaseline = "center";
-            
-            
-            for (var i=0;i<25;i++)
-            {
-            x= 220 + 190*Math.cos((i*14.4-90)*Math.PI/180);
-            y= 225 + 190*Math.sin((i*14.4-90)*Math.PI/180);
-            
-            contexto.fillStyle = '#ffffff';
-            contexto.beginPath();
-            contexto.arc(x, y-5,25, 0, Math.PI*2, true);
-            contexto.fill();
-        
-            switch(estado[i]){
-                case 0:	contexto.fillStyle = '#3b5998';	
-                            if(pos == i)
-                {contexto.fillStyle = '#cccccc';};break;
-                case 1:	contexto.fillStyle = '#55cc55';break;
-                case 2:	contexto.fillStyle = '#cc5555';break;
-                }
     
-                
-            contexto.beginPath();
-            contexto.arc(x, y-5,20, 0, Math.PI*2, true);
-            contexto.fill();
-            
-            contexto.fillStyle = '#000000';
-            contexto.fillText(letras.charAt(i), x , y );
-            }
-            
-            contexto.fillStyle = '#0000F0';
-            contexto.fillRect(10,445,65,40);
-            
-            contexto.strokeStyle = "rgb(0,0,0)";
-            contexto.lineWidth  = 3;
-            contexto.strokeRect(5,445,75,1);
-            contexto.strokeRect(5,485,80,1);
-            contexto.strokeRect(10,440,1,75);
-            contexto.strokeRect(75,435,1,80);
-            
-            contexto.fillStyle = '#FFFFFF';
-            contexto.fillText(aciertos.toString(), 50,475 );	
-    
-          }
-       }
+
+    function resizeCanvas() {
+        var canvas = document.getElementById('canvas_id');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight-380;
+        dibujar();
     }
+    
+    function dibujar(){
+        //Recibimos el elemento canvas
+        var elemento = document.getElementById('canvas_id');
+        //Comprobacion sobre si encontramos un elemento
+        //y podemos extraer su contexto con getContext(), que indica compatibilidad con canvas
+        if (elemento && elemento.getContext) {
+            //Accedo al contexto de '2d' de este canvas, necesario para dibujar
+            var contexto = elemento.getContext('2d');
+            if (contexto) {
+                //Si tengo el contexto 2d es que todo ha ido bien y puedo empezar a dibujar en el canvas
+                var radio = Math.min(elemento.width, elemento.height) / 2 - 30; // Radio del rosco
+                var centroX = elemento.width / 2; // Centro del canvas (x)
+                var centroY = elemento.height / 2; // Centro del canvas (y)
+    
+                contexto.fillStyle = '#000000';
+                contexto.font = '24px "Tahoma"';
+                contexto.textAlign = "center";
+                contexto.textBaseline = "center";
+    
+                for (var i=0;i<25;i++)
+                {
+                    x= centroX + radio*Math.cos((i*14.4-90)*Math.PI/180);
+                    y= centroY + radio*Math.sin((i*14.4-90)*Math.PI/180);
+    
+                    contexto.fillStyle = '#ffffff';
+                    contexto.beginPath();
+                    contexto.arc(x, y-5,25, 0, Math.PI*2, true);
+                    contexto.fill();
+    
+                    switch(estado[i]){
+                        case 0:	contexto.fillStyle = '#3b5998';	
+                                    if(pos == i)
+                        {contexto.fillStyle = '#cccccc';};break;
+                        case 1:	contexto.fillStyle = '#55cc55';break;
+                        case 2:	contexto.fillStyle = '#cc5555';break;
+                    }
+    
+                    contexto.beginPath();
+                    contexto.arc(x, y-5,20, 0, Math.PI*2, true);
+                    contexto.fill();
+    
+                    contexto.fillStyle = '#000000';
+                    contexto.fillText(letras.charAt(i), x , y );
+                }
+
+                // Dibujar la puntuación cerca del círculo de las letras
+                var puntuacionX = centroX - radio -90;
+                var puntuacionY = centroY + radio / 3 * 2;
+    
+                contexto.fillStyle = '#0000F0';
+                contexto.fillRect(puntuacionX, puntuacionY, 65, 40);
+                
+                contexto.strokeStyle = "rgb(0,0,0)";
+                contexto.lineWidth  = 3;
+                contexto.beginPath();
+                contexto.moveTo(puntuacionX - 5, puntuacionY);
+                contexto.lineTo(puntuacionX + 70, puntuacionY);
+                contexto.stroke();
+                
+                contexto.beginPath();
+                contexto.moveTo(puntuacionX - 5, puntuacionY + 40);
+                contexto.lineTo(puntuacionX + 70, puntuacionY + 40);
+                contexto.stroke();
+                
+                contexto.beginPath();
+                contexto.moveTo(puntuacionX, puntuacionY - 5);
+                contexto.lineTo(puntuacionX, puntuacionY + 45);
+                contexto.stroke();
+                
+                contexto.beginPath();
+                contexto.moveTo(puntuacionX + 65, puntuacionY - 5);
+                contexto.lineTo(puntuacionX + 65, puntuacionY + 45);
+                contexto.stroke();
+                
+                contexto.fillStyle = '#FFFFFF';
+                contexto.fillText(aciertos.toString(), puntuacionX + 30, puntuacionY + 25);
+            }
+        }
+    }
+    
+
     
   
     function jugar(){
