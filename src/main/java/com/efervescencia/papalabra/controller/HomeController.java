@@ -1,4 +1,4 @@
-package com.efervescencia.papalabra;
+package com.efervescencia.papalabra.controller;
 
 import java.util.List;
 
@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import com.efervescencia.papalabra.model.Score;
+import com.efervescencia.papalabra.repository.ScoreRepository;
 
 @Controller
 public class HomeController {

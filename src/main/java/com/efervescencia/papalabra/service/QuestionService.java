@@ -1,4 +1,4 @@
-package com.efervescencia.papalabra;
+package com.efervescencia.papalabra.service;
 
 import java.text.Normalizer;
 // Clase QuestionService
@@ -7,6 +7,9 @@ import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.efervescencia.papalabra.model.Question;
+import com.efervescencia.papalabra.repository.QuestionRepository;
 
 @Service
 public class QuestionService {

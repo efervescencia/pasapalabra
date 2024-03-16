@@ -1,4 +1,4 @@
-package com.efervescencia.papalabra;
+package com.efervescencia.papalabra.model;
 
 import java.sql.Date;
 

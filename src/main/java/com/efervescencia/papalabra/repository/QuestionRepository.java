@@ -1,7 +1,10 @@
-package com.efervescencia.papalabra;
+package com.efervescencia.papalabra.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import com.efervescencia.papalabra.model.Question;
+
 import java.util.List;
 
 @Repository

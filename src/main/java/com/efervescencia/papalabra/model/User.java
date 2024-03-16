@@ -1,4 +1,4 @@
-package com.efervescencia.papalabra;
+package com.efervescencia.papalabra.model;
 
 import java.util.HashSet;
 import java.util.Set;
