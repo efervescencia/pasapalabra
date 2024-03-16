@@ -1,0 +1,128 @@
+body {
+padding-top: 50px;
+background-color: rgba(115, 114, 152, 0.5);
+background: rgba(115, 114, 152, 0.5);
+color: black;
+}
+
+div.bg{
+  position: absolute;
+	margin:15px;
+  -webkit-border-radius: 800px;
+  -moz-border-radius: 800px;
+  border-radius: 800px;
+  border: 5px;
+  width: 280px;
+  height: 280px;
+  background: url(../imagenes/redimensionar.php?imagen=foto_defecto.jpg);
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size: 240px;
+  z-index: -1;
+}
+
+div.inner{position: relative; z-index: 1;}
+
+.container-canvas {
+    margin: 0 auto;
+    width:300px;
+}
+
+#rosco_id{
+width:320px;
+margin-left:auto;
+margin-right:auto;
+}
+
+#datos_usuario_id{
+margin: 1%;
+text-align:right;
+}
+
+#records_id{
+text-align:right;
+}
+
+
+#canvas_id{
+width:100%;
+}
+
+#texto_id{
+background-color:#99c;
+border-radius:10px;
+box-shadow: 10px 10px 5px #888888;
+padding-bottom:1%;
+}
+
+#preguntas_id{
+min-height:60px;
+}
+
+
+.center{
+text-align:center;
+}
+
+p{
+font-size:1.2em;
+color:black;
+text-align:left;
+}
+
+
+#datos_usuario_id #records{
+text-align:right;
+font-size:0.8em;
+}
+
+
+#logear_id {
+width: 30%;  /* Ancho de la ventana */
+min-width:20em;
+background: rgba(0,0,0,0.5);  /* Color de fondo */
+position: fixed;
+top: 10%;
+left: 30%;
+border: 1px solid #adffad;  /* Borde de la ventana */
+box-shadow: 0 5px 25px rgba(0,0,0,.1);  /* Sombra */
+z-index:999;
+}
+
+#registrar_id {
+width: 30%;  /* Ancho de la ventana */
+min-width:20em;
+background: rgba(0,0,0,0.5);  /* Color de fondo */
+position: fixed;
+top: 10%;
+left: 30%;
+border: 1px solid #adffad;  /* Borde de la ventana */
+box-shadow: 0 5px 25px rgba(0,0,0,.1);  /* Sombra */
+z-index:999;
+}
+
+#info_id {
+width: 60%;  /* Ancho de la ventana */
+min-width:20em;
+background: rgba(0,0,0,0.8);  /* Color de fondo */
+position: fixed;
+top: 5%;
+left: 20%;
+border: 1px solid #adffad;  /* Borde de la ventana */
+box-shadow: 0 5px 25px rgba(0,0,0,.1);  /* Sombra */
+z-index:999;
+}
+
+#contactar_id {
+width: 30%;  /* Ancho de la ventana */
+min-width:20em;
+background: rgba(0,0,0,0.8);  /* Color de fondo */
+position: fixed;
+top: 5%;
+left: 30%;
+border: 1px solid #adffad;  /* Borde de la ventana */
+box-shadow: 0 5px 25px rgba(0,0,0,.1);  /* Sombra */
+z-index:999;
+}
+
+
