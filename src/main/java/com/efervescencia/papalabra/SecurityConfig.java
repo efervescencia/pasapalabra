@@ -2,12 +2,14 @@ package com.efervescencia.papalabra;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 
@@ -29,10 +31,19 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
         return authProvider;
     }
 
-    @Override
-    public void configure(HttpSecurity http) throws Exception {
-        http.authenticationProvider(authenticationProvider());
-        // Add your HTTP security configuration here
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests(authorizeRequests -> 
+                authorizeRequests
+                    .requestMatchers(HttpMethod.GET, "/").permitAll() // Allow access to index.html
+                    .requestMatchers(HttpMethod.GET, "/home").authenticated() // Require authentication for home.html
+                    .anyRequest().authenticated()
+            )
+            .formLogin()
+                .defaultSuccessUrl("/home", true)
+                .permitAll();
+        return http.build();
     }
 }
 
