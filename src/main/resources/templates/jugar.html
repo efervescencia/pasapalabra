@@ -1,33 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- Tus scripts y estilos aquí -->
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <div id="login-box">
-        <form id="login-form">
-            <label for="username">Usuario:</label>
-            <input type="text" id="username" name="username">
-            <label for="password">Contraseña:</label>
-            <input type="password" id="password" name="password">
-            <input type="submit" value="Iniciar sesión">
-        </form>
-        <div id="user-info" style="display: none;">
-            <img id="user-photo" src="" alt="Foto del usuario">
-            <p id="user-name"></p>
-            <button id="edit-profile">Editar perfil</button>
-        </div>
+    <div class="indexHeader"></div>
+    <br><br>
+
+    <!-- HTML -->
+    <div id="rosco">
+        <canvas id="canvas_id" width="800" height="600"></canvas>
     </div>
-    <table>
-        <tr>
-            <th>Username</th>
-            <th>Aciertos</th>
-        </tr>
-        <tr th:each="user : ${topUsers}">
-            <td th:text="${user.username}"></td>
-            <td th:text="${user.aciertos}"></td>
-        </tr>
-    </table>
-    <button id="play-button">Jugar</button>
+
+
+    <div class="button-container">
+        <button id="play-button">Volver a Jugar</button>
+    </div>
+
+        <!-- Vinculación del archivo JavaScript -->
+    <script src="/js/jugar.js"></script>
 </body>
 </html>
