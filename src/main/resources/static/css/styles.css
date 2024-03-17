@@ -92,7 +92,7 @@ body {
 .title {
     text-align: center;
     font-size: 30px;
-    animation: colorchange 5s infinite;
+    /*animation: colorchange 5s infinite;*/
 }
 
 #rosco {

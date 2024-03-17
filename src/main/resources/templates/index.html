@@ -7,14 +7,14 @@
     <div class="indexHeader"></div>
     <br><br>
     <div class="title">
-        <BOLD>HALL OF FAME</BOLD>
+        <BOLD>MEJORES PUNTUACIONES</BOLD>
     </div>
     
     <div class="center">
         <table class="center">
             <tr>
-                <th>Name</th>
-                <th>Score</th>
+                <th>Nombre</th>
+                <th>Puntuación</th>
             </tr>
             <tr th:each="score : ${topScores}">
                 <td th:text="${score.username}"></td>

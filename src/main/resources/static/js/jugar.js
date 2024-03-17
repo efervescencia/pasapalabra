@@ -3,11 +3,11 @@ var aciertos;
 var fallos;
 var tiempo;
 var reloj;
-var preguntas =[];
+var estado_preguntas =[];
 var actual;
 var pos;
 var estado;
-var letras = "abcdefghijlmnñopqrstuvxyz";
+var letras = "ABCDEFGHIJLMNÑOPQRSTUVXYZ";
 var aciertos_usuario = 0; 
 var roscos_usuario = 0;
 var partidas_usuario = 0;
@@ -22,7 +22,7 @@ function iniciar(){
     tiempo = 180;
     reloj=null;
     pos = 0;
-    estado = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+    estado_preguntas = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
     dibujar_rosco();
     window.addEventListener('resize', resizeCanvas, false);
     // Call resizeCanvas once to initially size and draw the canvas
@@ -134,7 +134,7 @@ function iniciar(){
                     contexto.arc(x, y-5,25, 0, Math.PI*2, true);
                     contexto.fill();
     
-                    switch(estado[i]){
+                    switch(estado_preguntas[i]){
                         case 0:	contexto.fillStyle = '#3b5998';	
                                     if(pos == i)
                         {contexto.fillStyle = '#cccccc';};break;
@@ -143,7 +143,7 @@ function iniciar(){
                     }
     
                     contexto.beginPath();
-                    contexto.arc(x, y-5,20, 0, Math.PI*2, true);
+                    contexto.arc(x, y-7,20, 0, Math.PI*2, true);
                     contexto.fill();
     
                     contexto.fillStyle = '#000000';
