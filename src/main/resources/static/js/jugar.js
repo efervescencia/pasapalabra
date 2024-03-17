@@ -23,11 +23,11 @@ function iniciar(){
     reloj=null;
     pos = 0;
     estado = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-    dibujar();
+    dibujar_rosco();
     window.addEventListener('resize', resizeCanvas, false);
     // Call resizeCanvas once to initially size and draw the canvas
     resizeCanvas();
-    //dibujar_tiempo(tiempo);
+    dibujar_tiempo(tiempo);
     //poner_datos_login();
     //records();
     } 
@@ -62,35 +62,37 @@ function iniciar(){
     }
     
     
-        function dibujar_tiempo(seg){
-       var elemento = document.getElementById('canvas_id');
-       //Comprobacion sobre si encontramos un elemento
-       //y podemos extraer su contexto con getContext(), que indica compatibilidad con canvas
-       if (elemento && elemento.getContext) {
-          //Accedo al contexto de '2d' de este canvas, necesario para dibujar
-          var contexto = elemento.getContext('2d');
-          if (contexto) {
-             //Si tengo el contexto 2d es que todo ha ido bien y puedo empezar a dibujar en el canvas
-            
-            contexto.font = '24px "Tahoma"';
-            contexto.textAlign = "center";
-            contexto.textBaseline = "center";
-            
-            contexto.fillStyle = '#000000';
-            contexto.beginPath();
-            contexto.arc(40, 400,35, 0, Math.PI*2, true);
-            contexto.fill();
+    function dibujar_tiempo(seg){
+        var elemento = document.getElementById('canvas_id');
+        if (elemento && elemento.getContext) {
+            var contexto = elemento.getContext('2d');
+            if (contexto) {
+                var radio = Math.min(elemento.width, elemento.height) / 2 - 30; // Radio del rosco
+                var centroX = elemento.width / 2; // Centro del canvas (x)
+                var centroY = elemento.height / 2; // Centro del canvas (y)
     
-            contexto.fillStyle = '#aaaaFF';
-            contexto.beginPath();
-            contexto.arc(40, 400,30, 0, Math.PI*2, true);
-            contexto.fill();
-            
-            contexto.fillStyle = '#000000';
-            contexto.fillText(seg.toString(), 40,410 );	
-        
+                // Posición del tiempo relativa al rosco
+                var tiempoX = centroX - radio - (radio/4); 
+                var tiempoY = centroY - radio +(radio/5);
+    
+                contexto.font = '24px "Tahoma"';
+                contexto.textAlign = "center";
+                contexto.textBaseline = "center";
+    
+                contexto.fillStyle = '#000000';
+                contexto.beginPath();
+                contexto.arc(tiempoX, tiempoY, 35, 0, Math.PI*2, true);
+                contexto.fill();
+    
+                contexto.fillStyle = '#aaaaFF';
+                contexto.beginPath();
+                contexto.arc(tiempoX, tiempoY, 30, 0, Math.PI*2, true);
+                contexto.fill();
+    
+                contexto.fillStyle = '#000000';
+                contexto.fillText(seg.toString(), tiempoX, tiempoY + 10);
             }
-    }
+        }
     }
     
     
@@ -100,10 +102,10 @@ function iniciar(){
         var canvas = document.getElementById('canvas_id');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight-380;
-        dibujar();
+        dibujar_rosco();
     }
     
-    function dibujar(){
+    function dibujar_rosco(){
         //Recibimos el elemento canvas
         var elemento = document.getElementById('canvas_id');
         //Comprobacion sobre si encontramos un elemento
@@ -194,7 +196,7 @@ function iniciar(){
     var l=actual[0];
     
     pos = letras.indexOf(l);
-    dibujar();
+    dibujar_rosco();
     
     var mensaje;
     
@@ -216,7 +218,7 @@ function iniciar(){
     function finalizar(){
     //SE HA ACABADO EL JUEGO.
     clearInterval(reloj);
-    dibujar();
+    dibujar_rosco();
     if(aciertos>24){
     $('#preguntas_id').html("<br>La partida se ha acabado.<br><h3>HAS ACERTADO TODO EL ROSCO!!!</h3>.");
     }

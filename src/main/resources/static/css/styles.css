@@ -51,7 +51,7 @@ body::before {
     background-image: url('../imagenes/cabecera.jpg');
     background-repeat: no-repeat;
     background-size: cover;
-    height: 300px;
+    height: 200px;
     width: 100%;
 }
 
