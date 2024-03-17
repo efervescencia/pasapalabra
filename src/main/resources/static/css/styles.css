@@ -98,4 +98,28 @@ body {
 #rosco {
     display: flex;
     justify-content: center;
+    position: relative;
+}
+
+#playButton {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 30px; /* Tamaño de fuente más grande */
+    padding: 20px; /* Espacio interior alrededor del texto */
+    background-color: #1b7ad3; /* Color de fondo azul */
+    color: white; /* Color de texto blanco */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cursor de mano al pasar el ratón */
+    animation: zoom 2s infinite;
+}
+#playButton:hover {
+    background-color: #4136e0; /* Color de fondo más oscuro al pasar el ratón */
+}
+@keyframes zoom {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.1); }
+    100% { transform: translate(-50%, -50%) scale(1); }
 }
