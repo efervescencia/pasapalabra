@@ -14,44 +14,35 @@ var partidas_usuario = 0;
 
 window.onload = function() {
 iniciar();
+document.getElementById('playButton').addEventListener('click', jugar());
 };
 
 function iniciar(){
-    aciertos =0;
-    fallos =0;
+    // iniciarTiempo();
     tiempo = 180;
-    reloj=null;
+    // iniciarRosco();
     pos = 0;
     estado_preguntas = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+    aciertos =0;
+    fallos =0;
     dibujar_rosco();
     window.addEventListener('resize', resizeCanvas, false);
     // Call resizeCanvas once to initially size and draw the canvas
     resizeCanvas();
     dibujar_tiempo(tiempo);
     //poner_datos_login();
-    //records();
     } 
     
-    function otraVez(){
-    $("#jugarDeNuevo_id").css("display","none");
-    $('#preguntas_id').html("");
-    while(preguntas.length>0)
-    {
-    preguntas.shift();
+
+
+    function jugar(){
+
+        reloj = setInterval(quitarSegundo, 1000); // 1000 milisegundos = 1 segundo 
+
+
+
     }
-    iniciar();
-    $("#menu_id").css("display","block");
-    $("#respuestas_id").css("display", "none");
-    }
-    
-    function comenzar(){
-    $("#menu_id").css("display", "none");
-    $("#respuestas_id").css("display", "block");
-    $("#preguntas_id").html("<h3>Generando rosco...</h3>.");
-    cargarPreguntas();
-    jugar();
-    }
-    
+ 
     
     function quitarSegundo(){
             if(tiempo>0)
@@ -60,6 +51,32 @@ function iniciar(){
             { finalizar(); }
             dibujar_tiempo(tiempo);
     }
+
+
+    function pasapalabra(){
+        clearInterval(reloj);
+        if(tiempo>0){
+        preguntas.push(actual);
+        }
+        jugar();
+        }
+
+    function finalizar(){
+        clearInterval(reloj);
+        // Código para finalizar el juego...
+        }
+
+        function otraVez(){
+            $("#jugarDeNuevo_id").css("display","none");
+            $('#preguntas_id').html("");
+            while(preguntas.length>0)
+            {
+            preguntas.shift();
+            }
+            iniciar();
+            $("#menu_id").css("display","block");
+            $("#respuestas_id").css("display", "none");
+            }
     
     
     function dibujar_tiempo(seg){
@@ -188,54 +205,7 @@ function iniciar(){
 
     
   
-    function jugar(){
-    
-    if (quedanPreguntas() && tiempo>0)
-    {
-    actual = preguntas.shift();
-    var l=actual[0];
-    
-    pos = letras.indexOf(l);
-    dibujar_rosco();
-    
-    var mensaje;
-    
-    if (l=="ñ" || l=="q" || l=="x" || l=="y")
-        {mensaje="<p>Contiene la <B>"+l+":</B></p><p>"+actual[1]+"</p>";}
-    else
-        {mensaje="<p>Empieza con <B>"+l+":</B></p><p>"+actual[1]+"</p>";}
-        
-    $("#preguntas_id").html(mensaje);
-    $("#respuesta_usuario_id" ).focus();
-    reloj = setInterval(quitarSegundo,1000);  
-    }
-    else
-    {
-    finalizar();
-    }
-    }
-    
-    function finalizar(){
-    //SE HA ACABADO EL JUEGO.
-    clearInterval(reloj);
-    dibujar_rosco();
-    if(aciertos>24){
-    $('#preguntas_id').html("<br>La partida se ha acabado.<br><h3>HAS ACERTADO TODO EL ROSCO!!!</h3>.");
-    }
-    else
-    {
-    $('#preguntas_id').html("<br><h4>La partida se ha acabado.</h4>");
-    }
-    
-    $("#respuestas_id").css("display", "none");
-    $("#jugarDeNuevo_id").css("display","block");
-    $("#jugarDeNuevo_id").focus();
-}
- 
-    
-    function quedanPreguntas(){
-    return (preguntas.length >0);
-    }
+
     
 
     
@@ -281,13 +251,7 @@ function iniciar(){
         }
         
     
-    function pasapalabra(){
-    clearInterval(reloj);
-    if(tiempo>0){
-    preguntas.push(actual);
-    }
-    jugar();
-    }
+
     
 
         
