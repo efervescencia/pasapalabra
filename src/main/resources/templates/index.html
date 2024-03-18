@@ -12,10 +12,6 @@
     
     <div class="center">
         <table class="center">
-            <tr>
-                <th>Nombre</th>
-                <th>Puntuación</th>
-            </tr>
             <tr th:each="score : ${topScores}">
                 <td th:text="${score.username}"></td>
                 <td th:text="${score.score}"></td>
