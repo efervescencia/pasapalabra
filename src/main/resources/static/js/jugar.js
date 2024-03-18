@@ -14,7 +14,7 @@ var partidas_usuario = 0;
 
 window.onload = function() {
 iniciar();
-document.getElementById('playButton').addEventListener('click', jugar());
+document.getElementById('playButton').addEventListener('click', jugar);
 };
 
 function iniciar(){
@@ -31,12 +31,14 @@ function iniciar(){
     resizeCanvas();
     dibujar_tiempo(tiempo);
     //poner_datos_login();
+    document.getElementById('playButton').hidden = false;
     } 
     
 
 
     function jugar(){
-
+        //ocultamos boton
+        document.getElementById('playButton').hidden = true;
         reloj = setInterval(quitarSegundo, 1000); // 1000 milisegundos = 1 segundo 
 
 
