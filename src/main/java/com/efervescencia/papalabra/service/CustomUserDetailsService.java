@@ -1,6 +1,9 @@
 package com.efervescencia.papalabra.service;
 import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,6 +27,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (userEntity == null) {
             throw new UsernameNotFoundException("User not found");
         }
+
+        // Crear una lista de autoridades
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        // Añadir una autoridad por defecto
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
         return User.withUsername(userEntity.getUsername())
                 .password(userEntity.getPassword())
                 .authorities(new ArrayList<>()) // No authorities

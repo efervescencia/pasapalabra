@@ -36,7 +36,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
         http
             .authorizeHttpRequests(authorizeRequests -> 
                 authorizeRequests
-                    .requestMatchers(HttpMethod.GET, "/", "/index", "/jugar","/css/**", "/js/**", "/imagenes/**")
+                    .requestMatchers(HttpMethod.GET, "/", "/index", "/jugar","/rosco", "/css/**", "/js/**", "/imagenes/**")
                     .permitAll() // Allow access to index.html
                     .requestMatchers(HttpMethod.GET, "/home").authenticated() // Require authentication for home.html
                     .anyRequest().authenticated()

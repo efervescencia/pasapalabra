@@ -17,13 +17,17 @@ public class QuestionService {
     private QuestionRepository questionRepository;
 
     public Question getRandomQuestionByLetter(String letter) {
-        List<Question> questions = questionRepository.findByLetra(letter);
+        List<Question> questions = questionRepository.findByLetra(letter.toLowerCase());
         if (questions.isEmpty()) {
             return null; // o manejar de otra manera
         }
         Random rand = new Random();
-        return questions.get(rand.nextInt(questions.size()));
+        Question result =  questions.get(rand.nextInt(questions.size()));
+        result.setRespuesta("");
+        return result;
     }
+
+    
 
 public boolean checkAnswer(int questionId, String userAnswer) {
     String respuestaCorrecta = questionRepository.getAnswerById(questionId);

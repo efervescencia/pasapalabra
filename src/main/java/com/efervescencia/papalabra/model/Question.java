@@ -2,9 +2,11 @@ package com.efervescencia.papalabra.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 // Clase Question
 @Entity
+@Table(name = "preguntas")
 public class Question {
     @Id
     private int id;
@@ -12,6 +14,10 @@ public class Question {
     private String texto;
     private String respuesta;
     private int tema_id;
+
+    // Constructor sin argumentos
+    public Question() {
+    }
 
     // getters y setters
     public int getId() {

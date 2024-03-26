@@ -37,6 +37,19 @@ function iniciar(){
 
 
     function jugar(){
+        fetch('/rosco')
+        .then(response => {
+            if (response.headers.get('Content-Type').includes('application/json')) {
+                return response.json();
+            } else {
+                throw new Error('Received non-JSON response');
+            }
+        })
+        .then(rosco => {
+            // Aquí tienes el rosco, puedes hacer lo que quieras con él
+            console.log(rosco);
+        })
+        .catch(error => console.error('Error:', error));
         //ocultamos boton
         document.getElementById('playButton').hidden = true;
         reloj = setInterval(quitarSegundo, 1000); // 1000 milisegundos = 1 segundo 
