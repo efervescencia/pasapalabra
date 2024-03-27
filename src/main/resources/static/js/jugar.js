@@ -11,10 +11,23 @@ var letras = "ABCDEFGHIJLMNÑOPQRSTUVXYZ";
 var aciertos_usuario = 0; 
 var roscos_usuario = 0;
 var partidas_usuario = 0;
+var letraActual = 'A';
+var preguntaActual;
+var rosco = {};
+var preguntas;
 
 window.onload = function() {
 iniciar();
 document.getElementById('playButton').addEventListener('click', jugar);
+
+document.addEventListener('keydown', function(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        // Inicia el ciclo de juego
+        cicloDeJuego();
+    }
+});
+
 };
 
 function iniciar(){
@@ -22,9 +35,11 @@ function iniciar(){
     tiempo = 180;
     // iniciarRosco();
     pos = 0;
-    estado_preguntas = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
     aciertos =0;
     fallos =0;
+    for (let i = 0; i < letras.length; i++) {
+        estado_preguntas[i] = 0;
+    }
     dibujar_rosco();
     window.addEventListener('resize', resizeCanvas, false);
     // Call resizeCanvas once to initially size and draw the canvas
@@ -32,6 +47,7 @@ function iniciar(){
     dibujar_tiempo(tiempo);
     //poner_datos_login();
     document.getElementById('playButton').hidden = false;
+
     } 
     
 
@@ -45,19 +61,136 @@ function iniciar(){
                 throw new Error('Received non-JSON response');
             }
         })
-        .then(rosco => {
-            // Aquí tienes el rosco, puedes hacer lo que quieras con él
-            console.log(rosco);
+        .then(data => {
+            rosco = data;
+            //ocultamos boton
+            document.getElementById('playButton').hidden = true;
+            reloj = setInterval(quitarSegundo, 1000); // 1000 milisegundos = 1 segundo 
+            quitarSegundo(); // Llamar a quitarSegundo inmediatamente después de iniciar el intervalo
+            // mostrar primera pregunta
+            dibujar_pregunta(rosco[letras[pos]].texto);
         })
         .catch(error => console.error('Error:', error));
-        //ocultamos boton
-        document.getElementById('playButton').hidden = true;
-        reloj = setInterval(quitarSegundo, 1000); // 1000 milisegundos = 1 segundo 
-
-
-
     }
- 
+
+    function cicloDeJuego() {
+        var respuesta = document.getElementById('respuestaInput').value;
+        document.getElementById('respuestaInput').value = ''; // Limpiar el input
+    
+        if (respuesta === '') {
+            // Si el input está vacío, interpretarlo como "pasapalabra" y pasar a la siguiente pregunta
+            pos = (pos + 1) % letras.length;
+        } else {
+            // Si se proporciona una respuesta, comprobar si es correcta
+            if (respuesta.toLowerCase() === estado_preguntas[pos].pregunta.respuesta.toLowerCase()) {
+                // Si la respuesta es correcta, marcar la pregunta como respondida correctamente
+                estado_preguntas[pos].estado = 1;
+                aciertos++;
+            } else {
+                // Si la respuesta es incorrecta, marcar la pregunta como respondida incorrectamente
+                estado_preguntas[pos].estado = -1;
+                fallos++;
+            }
+    
+            // Pasar a la siguiente pregunta que aún no ha sido respondida
+            do {
+                pos = (pos + 1) % estado_preguntas.length;
+            } while (estado_preguntas[pos].estado !== 0 && !estado_preguntas.every(val => val.estado !== 0));
+        }
+    
+        // Dibujar la siguiente pregunta
+        dibujar_pregunta(rosco[letras[pos]].texto);
+    }
+    
+    function siguienteLetra(letra) {
+        // Encuentra el índice de la letra actual en la cadena de texto 'letras'
+        var indiceActual = letras.indexOf(letra);
+    
+        // Si la letra no se encuentra en 'letras', devuelve un error
+        if (indiceActual === -1) {
+            console.error(`La letra '${letra}' no se encuentra en 'letras'`);
+            return;
+        }
+    
+        // Calcula el índice de la siguiente letra
+        var indiceSiguiente = (indiceActual + 1) % letras.length;
+    
+        // Devuelve la siguiente letra
+        return letras[indiceSiguiente];
+    }
+    
+    function dibujar_pregunta(pregunta) {
+        var elementoCanvas = document.getElementById('canvas_id');
+        if (elementoCanvas && elementoCanvas.getContext) {
+            var contextoCanvas = elementoCanvas.getContext('2d');
+            if (contextoCanvas) {
+    
+                // Vuelve a dibujar el rosco
+                dibujar_rosco();
+    
+                // Redibujar el tiempo
+                dibujar_tiempo(tiempo);
+    
+                var radioRosco = Math.min(elementoCanvas.width, elementoCanvas.height) / 2 - 30; // Radio del rosco
+                var centroXCanvas = elementoCanvas.width / 2; // Centro del canvas (x)
+                var centroYCanvas = elementoCanvas.height / 2; // Centro del canvas (y)
+    
+                contextoCanvas.fillStyle = '#000000';
+                contextoCanvas.font = '24px "Tahoma"';
+                contextoCanvas.textAlign = "center";
+                contextoCanvas.textBaseline = "middle";
+    
+                // Divide la pregunta en palabras
+                var palabrasPregunta = pregunta.split(' ');
+                var lineaTexto = '';
+                var lineasTexto = [];
+    
+                for (var n = 0; n < palabrasPregunta.length; n++) {
+                    var pruebaLinea = lineaTexto + palabrasPregunta[n] + ' ';
+                    var metricsTexto = contextoCanvas.measureText(pruebaLinea);
+                    var testWidthTexto = metricsTexto.width;
+                    if (testWidthTexto > radioRosco * 2 * 0.7 && n > 0) {
+                        lineasTexto.push(lineaTexto);
+                        lineaTexto = palabrasPregunta[n] + ' ';
+                    }
+                    else {
+                        lineaTexto = pruebaLinea;
+                    }
+                }
+                lineasTexto.push(lineaTexto);
+    
+                // Dibuja las líneas en el canvas, centradas verticalmente
+                var lineHeightTexto = parseInt(contextoCanvas.font); // Altura de la línea
+                var totalHeightTexto = lineasTexto.length * lineHeightTexto; // Altura total del texto
+                var startYTexto = centroYCanvas - totalHeightTexto / 2 + lineHeightTexto / 2; // Posición y de inicio para el dibujo
+    
+                contextoCanvas.fillStyle = '#000000'; // Establece el color del texto a negro
+    
+                for (var i = 0; i < lineasTexto.length; i++) {
+                    contextoCanvas.fillText(lineasTexto[i], centroXCanvas, startYTexto + i * lineHeightTexto);
+                }
+            }
+        }
+    }
+
+
+    function comprobarRespuesta() {
+        // Obtiene la respuesta del usuario
+        var respuestaUsuario = document.getElementById('respuestaInput').value;
+    
+        // Comprueba si la respuesta es correcta
+        if (rosco[letraActual].respuesta === respuestaUsuario) {
+            // Si la respuesta es correcta, marca la pregunta como respondida
+            estadoPreguntas[pos] = 1;
+        }
+    
+        // Limpia el input
+        document.getElementById('respuestaInput').value = '';
+    
+        // Continúa con el ciclo de juego
+        cicloDeJuego();
+    }
+
     
     function quitarSegundo(){
             if(tiempo>0)
@@ -68,31 +201,12 @@ function iniciar(){
     }
 
 
-    function pasapalabra(){
-        clearInterval(reloj);
-        if(tiempo>0){
-        preguntas.push(actual);
-        }
-        jugar();
-        }
-
     function finalizar(){
         clearInterval(reloj);
         // Código para finalizar el juego...
         }
 
-        function otraVez(){
-            $("#jugarDeNuevo_id").css("display","none");
-            $('#preguntas_id').html("");
-            while(preguntas.length>0)
-            {
-            preguntas.shift();
-            }
-            iniciar();
-            $("#menu_id").css("display","block");
-            $("#respuestas_id").css("display", "none");
-            }
-    
+   
     
     function dibujar_tiempo(seg){
         var elemento = document.getElementById('canvas_id');
@@ -100,7 +214,7 @@ function iniciar(){
             var contexto = elemento.getContext('2d');
             if (contexto) {
                 var radio = Math.min(elemento.width, elemento.height) / 2 - 30; // Radio del rosco
-                var centroX = elemento.width / 2; // Centro del canvas (x)
+                var centroX = elemento.width / 2 - 30; // Centro del canvas (x)
                 var centroY = elemento.height / 2; // Centro del canvas (y)
     
                 // Posición del tiempo relativa al rosco
@@ -109,7 +223,7 @@ function iniciar(){
     
                 contexto.font = '24px "Tahoma"';
                 contexto.textAlign = "center";
-                contexto.textBaseline = "center";
+                contexto.textBaseline = "middle";
     
                 contexto.fillStyle = '#000000';
                 contexto.beginPath();
@@ -146,6 +260,7 @@ function iniciar(){
             //Accedo al contexto de '2d' de este canvas, necesario para dibujar
             var contexto = elemento.getContext('2d');
             if (contexto) {
+                contexto.clearRect(0, 0, elemento.width, elemento.height);
                 //Si tengo el contexto 2d es que todo ha ido bien y puedo empezar a dibujar en el canvas
                 var radio = Math.min(elemento.width, elemento.height) / 2 - 30; // Radio del rosco
                 var centroX = elemento.width / 2; // Centro del canvas (x)
@@ -218,52 +333,7 @@ function iniciar(){
     }
     
 
-    
-  
 
-    
-
-    
-    function comprobar(){
-    
-    var rtecleada = quitaAcentos($("#respuesta_usuario_id").val().trim());
-    clearInterval(reloj);
-    
-    if( tiempo>0){
-    
-        if ( rtecleada != "" && rtecleada != "p" && rtecleada != "pasa" && rtecleada != "pasapalabra" )
-        {
-        web = "php/correcta.php?id="+actual[2];
-        $.ajax({
-        async: false,
-        type: "GET",
-        dataType:"text",
-        url: web,
-        success: function(data) {
-        var rcorrecta = quitaAcentos(data.trim());
-        if(rcorrecta[0]<'A' || rcorrecta[0]>'z')
-            {	
-            rcorrecta=rcorrecta.substr(1);
-            }
-        if ( esIgual(rcorrecta,rtecleada) || esIgual(rcorrecta+"s",rtecleada) || esIgual(rcorrecta+"es",rtecleada) )
-        {
-        aciertos+=1;estado[pos]=1;
-        }
-        else
-        {
-        fallos+=1;estado[pos]=2;alert("La respuesta correcta es: "+data);
-        }
-        }
-        });
-        }
-        else{
-        // SE PASA PALABRA
-        preguntas.push(actual);
-        }	
-        }
-        $("#respuesta_usuario_id").val("");
-        jugar();
-        }
         
     
 
