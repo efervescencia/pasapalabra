@@ -234,7 +234,31 @@ function iniciar(){
     function finalizar(){
         clearInterval(reloj);
         // Código para finalizar el juego...
+
+        // Obtén el contexto del canvas
+        var elemento = document.getElementById('canvas_id');
+        var contexto = elemento.getContext('2d');
+
+        // Dibuja un rectángulo semi-transparente sobre todo el canvas
+        contexto.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        contexto.fillRect(0, 0, elemento.width, elemento.height);
+
+        // Dibuja el mensaje
+        contexto.fillStyle = '#FFFFFF';
+        contexto.font = '40px "Tahoma"';
+        contexto.textAlign = "center";
+        contexto.textBaseline = "middle";
+        contexto.fillText("Tiempo agotado", elemento.width / 2, elemento.height / 2);
+        
+            // Pregunta al usuario si quiere jugar otra vez
+        var jugarOtraVez = confirm("¿Quieres jugar otra vez?");
+        if (jugarOtraVez) {
+            // Reinicia el juego
+            // (necesitarás implementar esta función tú mismo)
+            iniciar();
+            }
         }
+        
 
    
     
@@ -358,6 +382,38 @@ function iniciar(){
                 
                 contexto.fillStyle = '#FFFFFF';
                 contexto.fillText(aciertos.toString(), puntuacionX + 30, puntuacionY + 25);
+
+                // Dibujar el número de fallos debajo de la puntuación
+var fallosX = puntuacionX;
+var fallosY = puntuacionY + 70; // 70 es la distancia entre la puntuación y los fallos
+
+contexto.fillStyle = '#FF0000'; // Fondo rojo
+contexto.fillRect(fallosX, fallosY, 65, 40);
+
+contexto.strokeStyle = "rgb(0,0,0)";
+contexto.lineWidth  = 3;
+contexto.beginPath();
+contexto.moveTo(fallosX - 5, fallosY);
+contexto.lineTo(fallosX + 70, fallosY);
+contexto.stroke();
+
+contexto.beginPath();
+contexto.moveTo(fallosX - 5, fallosY + 40);
+contexto.lineTo(fallosX + 70, fallosY + 40);
+contexto.stroke();
+
+contexto.beginPath();
+contexto.moveTo(fallosX, fallosY - 5);
+contexto.lineTo(fallosX, fallosY + 45);
+contexto.stroke();
+
+contexto.beginPath();
+contexto.moveTo(fallosX + 65, fallosY - 5);
+contexto.lineTo(fallosX + 65, fallosY + 45);
+contexto.stroke();
+
+contexto.fillStyle = '#FFFFFF'; // Texto blanco
+contexto.fillText(fallos.toString(), fallosX + 30, fallosY + 25);
             }
         }
     }
