@@ -29,15 +29,9 @@ public class QuestionService {
 
     
 
-public boolean checkAnswer(int questionId, String userAnswer) {
-    String respuestaCorrecta = questionRepository.getAnswerById(questionId);
-
-    // Normalizar las cadenas para eliminar acentos y convertir a minúsculas
-    String normalizedCorrectAnswer = Normalizer.normalize(respuestaCorrecta, Normalizer.Form.NFD)
-        .replaceAll("[^\\p{ASCII}]", "").toLowerCase().trim();
-    String normalizedUserAnswer = Normalizer.normalize(userAnswer, Normalizer.Form.NFD)
-        .replaceAll("[^\\p{ASCII}]", "").toLowerCase().trim();
-
-    return normalizedCorrectAnswer.equals(normalizedUserAnswer);
-}
+    public Question getQuestionById(int id) {
+        // Usa el método findById del repositorio para obtener la pregunta
+        // Este método devuelve un Optional, por lo que usamos orElse(null) para devolver null si la pregunta no se encuentra
+        return questionRepository.getAnswerById(id).orElse(null);
+    }
 }

@@ -73,23 +73,24 @@ function iniciar(){
         .catch(error => console.error('Error:', error));
     }
 
-    function cicloDeJuego() {
+    async function cicloDeJuego() {
         var respuesta = document.getElementById('respuestaInput').value;
-        document.getElementById('respuestaInput').value = ''; // Limpiar el input
-    
+
         if (respuesta === '') {
             // Si el input está vacío, interpretarlo como "pasapalabra" y pasar a la siguiente pregunta
             pos = (pos + 1) % letras.length;
         } else {
             // Si se proporciona una respuesta, comprobar si es correcta
-            if (respuesta.toLowerCase() === estado_preguntas[pos].pregunta.respuesta.toLowerCase()) {
+            respuestaCorrecta = await comprobarRespuesta();
+            if (respuestaCorrecta=== 'OK') {
                 // Si la respuesta es correcta, marcar la pregunta como respondida correctamente
-                estado_preguntas[pos].estado = 1;
+                estado_preguntas[pos] = 1;
                 aciertos++;
             } else {
                 // Si la respuesta es incorrecta, marcar la pregunta como respondida incorrectamente
-                estado_preguntas[pos].estado = -1;
+                estado_preguntas[pos] = -1;
                 fallos++;
+                alert("La respuesta correcta era: "+respuestaCorrecta);
             }
     
             // Pasar a la siguiente pregunta que aún no ha sido respondida
@@ -100,6 +101,7 @@ function iniciar(){
     
         // Dibujar la siguiente pregunta
         dibujar_pregunta(rosco[letras[pos]].texto);
+        document.getElementById('respuestaInput').value = ''; // Limpiar el input
     }
     
     function siguienteLetra(letra) {
@@ -174,21 +176,49 @@ function iniciar(){
     }
 
 
-    function comprobarRespuesta() {
+    async function comprobarRespuesta() {
         // Obtiene la respuesta del usuario
         var respuestaUsuario = document.getElementById('respuestaInput').value;
+        
+        // ID de la pregunta actual
+        var idPregunta = rosco[letras[pos]].id;
+
+        // Reemplaza 'urlDelBackend' con la URL de tu backend
+        var url = '/comprobarRespuesta';
     
-        // Comprueba si la respuesta es correcta
-        if (rosco[letraActual].respuesta === respuestaUsuario) {
-            // Si la respuesta es correcta, marca la pregunta como respondida
-            estadoPreguntas[pos] = 1;
+        // Los datos que enviarás en la solicitud
+        var datos = {
+            idPregunta: idPregunta,
+            respuesta: respuestaUsuario
+        };
+    
+        // Obtiene el token CSRF del meta tag
+        var csrfToken = document.querySelector('meta[name="_csrf"]').content;
+    
+        // Opciones de la solicitud fetch
+        var opciones = {
+            method: 'POST', // o 'GET' si tu backend lo requiere
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken // Incluye el token CSRF en la cabecera de la solicitud
+            },
+            body: JSON.stringify(datos) // convierte los datos a una cadena JSON
+        };
+    
+        try {
+            let response = await fetch(url, opciones);
+            let data = await response.json();
+    
+            if (data.respuesta === 'OK') {
+                // La respuesta es correcta
+                return 'OK';
+            } else {
+                // La respuesta es incorrecta
+                return data.respuesta;
+            }
+        } catch (error) {
+            console.error('Error:', error);
         }
-    
-        // Limpia el input
-        document.getElementById('respuestaInput').value = '';
-    
-        // Continúa con el ciclo de juego
-        cicloDeJuego();
     }
 
     
@@ -286,7 +316,7 @@ function iniciar(){
                                     if(pos == i)
                         {contexto.fillStyle = '#cccccc';};break;
                         case 1:	contexto.fillStyle = '#55cc55';break;
-                        case 2:	contexto.fillStyle = '#cc5555';break;
+                        case -1:	contexto.fillStyle = '#cc5555';break;
                     }
     
                     contexto.beginPath();
@@ -331,15 +361,4 @@ function iniciar(){
             }
         }
     }
-    
-
-
-        
-    
-
-    
-
-        
-
-    
-    
+ 
