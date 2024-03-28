@@ -43,6 +43,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                     .anyRequest().authenticated()
             )
             .formLogin()
+                .loginPage("/jugar") // Specify your login page here
                 .defaultSuccessUrl("/home", true)
                 .permitAll();
         return http.build();
