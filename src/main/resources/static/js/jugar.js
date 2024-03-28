@@ -16,6 +16,16 @@ var preguntaActual;
 var rosco = {};
 var preguntas;
 
+// Carga los sonidos
+var sonidoClick = new Audio('mp3/click.mp3');
+sonidoClick.loop = true;
+var sonidoJugar = new Audio('mp3/jugar.mp3');
+var sonidoFin = new Audio('mp3/fin.mp3');
+var sonidoAcierto = new Audio('mp3/acierto.mp3');
+var sonidoFallo = new Audio('mp3/fallo.mp3');
+var sonidoPasapalabra = new Audio('mp3/pasapalabra.mp3');
+sonidoPasapalabra.volume = 0.2;
+
 window.onload = function() {
 iniciar();
 document.getElementById('playButton').addEventListener('click', jugar);
@@ -67,6 +77,7 @@ function iniciar(){
             document.getElementById('playButton').hidden = true;
             reloj = setInterval(quitarSegundo, 1000); // 1000 milisegundos = 1 segundo 
             quitarSegundo(); // Llamar a quitarSegundo inmediatamente después de iniciar el intervalo
+            sonidoClick.play();
             // mostrar primera pregunta
             dibujar_pregunta(rosco[letras[pos]].texto);
         })
@@ -77,6 +88,7 @@ function iniciar(){
         var respuesta = document.getElementById('respuestaInput').value;
 
         if (respuesta === '') {
+            sonidoPasapalabra.play();
             // Si el input está vacío, interpretarlo como "pasapalabra" y pasar a la siguiente pregunta
             pos = (pos + 1) % letras.length;
         } else {
@@ -211,9 +223,11 @@ function iniciar(){
     
             if (data.respuesta === 'OK') {
                 // La respuesta es correcta
+                sonidoAcierto.play();
                 return 'OK';
             } else {
                 // La respuesta es incorrecta
+                sonidoFallo.play();
                 return data.respuesta;
             }
         } catch (error) {
@@ -224,9 +238,16 @@ function iniciar(){
     
     function quitarSegundo(){
             if(tiempo>0)
-            { tiempo-=1; }
+            { 
+                tiempo-=1; 
+            }
             else
-            { finalizar(); }
+            { 
+                sonidoClick.pause();
+                sonidoClick.currentTime = 0; // Opcional: reinicia el sonido para la próxima vez que se reproduzca
+                sonidoFin.play();
+                finalizar(); 
+            }
             dibujar_tiempo(tiempo);
     }
 
