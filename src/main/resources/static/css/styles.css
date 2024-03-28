@@ -146,3 +146,15 @@ body {
 #errorCounter {
     font-size: 2vw; 
 }
+
+#loginBox {
+    position: absolute; 
+    right: 0; 
+    top: 24vh; /* Ajusta esto al tamaño de tu cabecera */
+    width: 15vw; /* Anchura reducida */
+    min-width: 150px; /* Anchura mínima */
+    padding: 2vh; 
+    background-color: #f8f8f8; 
+    border: 1px solid #ccc;
+    color: #333; /* Color de texto oscuro */
+}
