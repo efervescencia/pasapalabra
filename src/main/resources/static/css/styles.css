@@ -50,10 +50,11 @@ body::before {
 .indexHeader {
     background-image: url('../imagenes/cabecera.jpg');
     background-repeat: no-repeat;
-    background-size: cover;
-    height: 200px;
-    width: 100%;
-}
+    background-size: contain;
+    background-position: center top; /* Centra la imagen de fondo */
+    height: 24vh; 
+    width: auto; 
+    margin: 0 auto;}
 
 body {
     background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
@@ -106,8 +107,8 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 30px; /* Tamaño de fuente más grande */
-    padding: 20px; /* Espacio interior alrededor del texto */
+    font-size: 3vw; /* Tamaño de fuente responsivo */
+    padding: 1vw; /* Espacio interior alrededor del texto responsivo */
     background-color: #1b7ad3; /* Color de fondo azul */
     color: white; /* Color de texto blanco */
     border: none; /* Sin borde */
@@ -115,6 +116,7 @@ body {
     cursor: pointer; /* Cursor de mano al pasar el ratón */
     animation: zoom 2s infinite;
 }
+
 #playButton:hover {
     background-color: #4136e0; /* Color de fondo más oscuro al pasar el ratón */
 }
@@ -131,4 +133,16 @@ body {
 
 #respuestaDiv input {
     font-size: 24px; 
+}
+
+#musicButton {
+    position: absolute; 
+    top: 220px; 
+    right: 30%;
+    z-index: 1000; /* Cualquier número grande para asegurarte de que esté encima de los demás elementos */
+
+}
+
+#errorCounter {
+    font-size: 2vw; 
 }

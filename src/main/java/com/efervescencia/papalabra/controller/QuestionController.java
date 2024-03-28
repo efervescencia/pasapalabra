@@ -1,5 +1,6 @@
 package com.efervescencia.papalabra.controller;
 
+import java.text.Normalizer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,37 +43,33 @@ public class QuestionController {
 
 
     @PostMapping("/comprobarRespuesta")
-public ResponseEntity<Map<String, String>> comprobarRespuesta(@RequestBody ComprobarRespuestaRequest request) {
-    // Obtiene la pregunta usando el ID
-    Question question = questionService.getQuestionById(request.getIdPregunta());
-
-    // Obtiene la respuesta correcta
-    String respuestaCorrecta = question.getRespuesta();
-
-    // Obtiene la respuesta del jugador
-    String respuestaJugador = request.getRespuesta();
-
-    // Convierte ambas respuestas a minúsculas para hacer la comparación insensible a mayúsculas y minúsculas
-    respuestaCorrecta = respuestaCorrecta.toLowerCase();
-    respuestaJugador = respuestaJugador.toLowerCase();
-
-    // Elimina los caracteres de plural (s, es) al final de las respuestas para manejar correctamente el plural y el singular
-    if (respuestaCorrecta.endsWith("s") || respuestaCorrecta.endsWith("es")) {
-        respuestaCorrecta = respuestaCorrecta.substring(0, respuestaCorrecta.length() - 1);
+    public ResponseEntity<Map<String, String>> comprobarRespuesta(@RequestBody ComprobarRespuestaRequest request) {
+        // Obtiene la pregunta usando el ID
+        Question question = questionService.getQuestionById(request.getIdPregunta());
+    
+        // Obtiene la respuesta correcta
+        String respuestaCorrecta = question.getRespuesta();
+    
+        // Obtiene la respuesta del jugador
+        String respuestaJugador = request.getRespuesta();
+    
+        // Convierte ambas respuestas a minúsculas y elimina los acentos
+        respuestaCorrecta = Normalizer.normalize(respuestaCorrecta.toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+        respuestaJugador = Normalizer.normalize(respuestaJugador.toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+    
+        // Comprueba si las respuestas son iguales, o si la respuesta del jugador coincide con la respuesta correcta en masculino, femenino, singular o plural
+        Map<String, String> resultado = new HashMap<>();
+        if (respuestaCorrecta.equals(respuestaJugador) ||
+            respuestaCorrecta.equals(respuestaJugador + "a") ||
+            respuestaCorrecta.equals(respuestaJugador + "o") ||
+            respuestaCorrecta.equals(respuestaJugador + "s") ||
+            respuestaCorrecta.equals(respuestaJugador + "es")) {
+            resultado.put("respuesta", "OK");
+        } else {
+            resultado.put("respuesta", respuestaCorrecta); // Devuelve la respuesta correcta si la respuesta del jugador es incorrecta
+        }
+    
+        return ResponseEntity.ok(resultado);
     }
-    if (respuestaJugador.endsWith("s") || respuestaJugador.endsWith("es")) {
-        respuestaJugador = respuestaJugador.substring(0, respuestaJugador.length() - 1);
-    }
-
-    // Comprueba si las respuestas son iguales
-    Map<String, String> resultado = new HashMap<>();
-    if (respuestaCorrecta.equals(respuestaJugador)) {
-        resultado.put("respuesta", "OK");
-    } else {
-        resultado.put("respuesta", respuestaCorrecta); // Devuelve la respuesta correcta si la respuesta del jugador es incorrecta
-    }
-
-    return ResponseEntity.ok(resultado);
-}
 
 }

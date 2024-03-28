@@ -17,6 +17,8 @@ var rosco = {};
 var preguntas;
 
 // Carga los sonidos
+var sonidoSintonia = new Audio('mp3/sintonia.mp3');
+sonidoSintonia.volume = 0.2;
 var sonidoClick = new Audio('mp3/click.mp3');
 sonidoClick.loop = true;
 var sonidoJugar = new Audio('mp3/jugar.mp3');
@@ -25,6 +27,8 @@ var sonidoAcierto = new Audio('mp3/acierto.mp3');
 var sonidoFallo = new Audio('mp3/fallo.mp3');
 var sonidoPasapalabra = new Audio('mp3/pasapalabra.mp3');
 sonidoPasapalabra.volume = 0.2;
+let musicOn = true;
+
 
 window.onload = function() {
 iniciar();
@@ -40,7 +44,32 @@ document.addEventListener('keydown', function(event) {
 
 };
 
+function playMusic() {
+    if (tiempo === 180 || tiempo === 0) {
+        musicOn = true;
+        sonidoSintonia.play();
+        document.getElementById('musicButton').innerHTML = '<i class="fas fa-volume-up"></i>';
+    }
+}
+
+function stopMusic() {
+        musicOn = false;
+        sonidoSintonia.pause();
+        document.getElementById('musicButton').innerHTML = '<i class="fas fa-volume-mute"></i>';
+}
+
+function toggleMusic() {
+    if (musicOn) {
+        stopMusic();
+    } else {
+        playMusic();
+    }
+}
+
 function iniciar(){
+    if (musicOn) {
+        sonidoSintonia.play();
+    }
     // iniciarTiempo();
     tiempo = 180;
     // iniciarRosco();
@@ -77,6 +106,8 @@ function iniciar(){
             document.getElementById('playButton').hidden = true;
             reloj = setInterval(quitarSegundo, 1000); // 1000 milisegundos = 1 segundo 
             quitarSegundo(); // Llamar a quitarSegundo inmediatamente después de iniciar el intervalo
+            sonidoSintonia.pause();
+            sonidoSintonia.currentTime = 0; // Opcional: reinicia el sonido para la próxima vez que se reproduzca
             sonidoClick.play();
             // mostrar primera pregunta
             dibujar_pregunta(rosco[letras[pos]].texto);
@@ -86,11 +117,10 @@ function iniciar(){
 
     async function cicloDeJuego() {
         var respuesta = document.getElementById('respuestaInput').value;
-
+    
         if (respuesta === '') {
             sonidoPasapalabra.play();
-            // Si el input está vacío, interpretarlo como "pasapalabra" y pasar a la siguiente pregunta
-            pos = (pos + 1) % letras.length;
+            // Si el input está vacío, interpretarlo como "pasapalabra"
         } else {
             // Si se proporciona una respuesta, comprobar si es correcta
             respuestaCorrecta = await comprobarRespuesta();
@@ -104,12 +134,12 @@ function iniciar(){
                 fallos++;
                 alert("La respuesta correcta era: "+respuestaCorrecta);
             }
-    
-            // Pasar a la siguiente pregunta que aún no ha sido respondida
-            do {
-                pos = (pos + 1) % estado_preguntas.length;
-            } while (estado_preguntas[pos].estado !== 0 && !estado_preguntas.every(val => val.estado !== 0));
         }
+    
+        // Pasar a la siguiente pregunta que aún no ha sido respondida
+        do {
+            pos = (pos + 1) % estado_preguntas.length;
+        } while (estado_preguntas[pos] !== 0 && !estado_preguntas.every(val => val !== 0));
     
         // Dibujar la siguiente pregunta
         dibujar_pregunta(rosco[letras[pos]].texto);
@@ -322,7 +352,7 @@ function iniciar(){
     function resizeCanvas() {
         var canvas = document.getElementById('canvas_id');
         canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight-380;
+        canvas.height = window.innerHeight * 0.6;
         dibujar_rosco();
     }
     
@@ -339,8 +369,8 @@ function iniciar(){
                 //Si tengo el contexto 2d es que todo ha ido bien y puedo empezar a dibujar en el canvas
                 var radio = Math.min(elemento.width, elemento.height) / 2 - 30; // Radio del rosco
                 var centroX = elemento.width / 2; // Centro del canvas (x)
-                var centroY = elemento.height / 2; // Centro del canvas (y)
-    
+                var centroY = ((elemento.height ) / 2 ) ; // Centro del canvas (y)
+
                 contexto.fillStyle = '#000000';
                 contexto.font = '24px "Tahoma"';
                 contexto.textAlign = "center";
@@ -372,69 +402,69 @@ function iniciar(){
                     contexto.fillText(letras.charAt(i), x , y );
                 }
 
-                // Dibujar la puntuación cerca del círculo de las letras
-                var puntuacionX = centroX - radio -90;
-                var puntuacionY = centroY + radio / 3 * 2;
-    
-                contexto.fillStyle = '#0000F0';
-                contexto.fillRect(puntuacionX, puntuacionY, 65, 40);
+        // Dibujar la puntuación cerca del círculo de las letras
+        var puntuacionX = centroX - radio - elemento.width * 0.06; // 10% del ancho del canvas
+        var puntuacionY = centroY + radio / 3 * 2;
+
+        contexto.fillStyle = '#0000F0';
+        contexto.fillRect(puntuacionX, puntuacionY, 65, 40);
+        
+        contexto.strokeStyle = "rgb(0,0,0)";
+        contexto.lineWidth  = 3;
+        contexto.beginPath();
+        contexto.moveTo(puntuacionX - 5, puntuacionY);
+        contexto.lineTo(puntuacionX + 70, puntuacionY);
+        contexto.stroke();
                 
-                contexto.strokeStyle = "rgb(0,0,0)";
-                contexto.lineWidth  = 3;
-                contexto.beginPath();
-                contexto.moveTo(puntuacionX - 5, puntuacionY);
-                contexto.lineTo(puntuacionX + 70, puntuacionY);
-                contexto.stroke();
-                
-                contexto.beginPath();
-                contexto.moveTo(puntuacionX - 5, puntuacionY + 40);
-                contexto.lineTo(puntuacionX + 70, puntuacionY + 40);
-                contexto.stroke();
-                
-                contexto.beginPath();
-                contexto.moveTo(puntuacionX, puntuacionY - 5);
-                contexto.lineTo(puntuacionX, puntuacionY + 45);
-                contexto.stroke();
-                
-                contexto.beginPath();
-                contexto.moveTo(puntuacionX + 65, puntuacionY - 5);
-                contexto.lineTo(puntuacionX + 65, puntuacionY + 45);
-                contexto.stroke();
-                
-                contexto.fillStyle = '#FFFFFF';
-                contexto.fillText(aciertos.toString(), puntuacionX + 30, puntuacionY + 25);
+        contexto.beginPath();
+        contexto.moveTo(puntuacionX - 5, puntuacionY + 40);
+        contexto.lineTo(puntuacionX + 70, puntuacionY + 40);
+        contexto.stroke();
+        
+        contexto.beginPath();
+        contexto.moveTo(puntuacionX, puntuacionY - 5);
+        contexto.lineTo(puntuacionX, puntuacionY + 45);
+        contexto.stroke();
+        
+        contexto.beginPath();
+        contexto.moveTo(puntuacionX + 65, puntuacionY - 5);
+        contexto.lineTo(puntuacionX + 65, puntuacionY + 45);
+        contexto.stroke();
+        
+        contexto.fillStyle = '#FFFFFF';
+        contexto.fillText(aciertos.toString(), puntuacionX + 30, puntuacionY + 25);
 
-                // Dibujar el número de fallos debajo de la puntuación
-var fallosX = puntuacionX;
-var fallosY = puntuacionY + 70; // 70 es la distancia entre la puntuación y los fallos
+        // Dibujar el número de fallos debajo de la puntuación
+        var fallosX = puntuacionX;
+        var fallosY = puntuacionY + elemento.height * 0.1; // 10% de la altura del canvas
 
-contexto.fillStyle = '#FF0000'; // Fondo rojo
-contexto.fillRect(fallosX, fallosY, 65, 40);
+        contexto.fillStyle = '#FF0000'; // Fondo rojo
+        contexto.fillRect(fallosX, fallosY, 65, 40);
 
-contexto.strokeStyle = "rgb(0,0,0)";
-contexto.lineWidth  = 3;
-contexto.beginPath();
-contexto.moveTo(fallosX - 5, fallosY);
-contexto.lineTo(fallosX + 70, fallosY);
-contexto.stroke();
+        contexto.strokeStyle = "rgb(0,0,0)";
+        contexto.lineWidth  = 3;
+        contexto.beginPath();
+        contexto.moveTo(fallosX - 5, fallosY);
+        contexto.lineTo(fallosX + 70, fallosY);
+        contexto.stroke();
 
-contexto.beginPath();
-contexto.moveTo(fallosX - 5, fallosY + 40);
-contexto.lineTo(fallosX + 70, fallosY + 40);
-contexto.stroke();
+        contexto.beginPath();
+        contexto.moveTo(fallosX - 5, fallosY + 40);
+        contexto.lineTo(fallosX + 70, fallosY + 40);
+        contexto.stroke();
 
-contexto.beginPath();
-contexto.moveTo(fallosX, fallosY - 5);
-contexto.lineTo(fallosX, fallosY + 45);
-contexto.stroke();
+        contexto.beginPath();
+        contexto.moveTo(fallosX, fallosY - 5);
+        contexto.lineTo(fallosX, fallosY + 45);
+        contexto.stroke();
 
-contexto.beginPath();
-contexto.moveTo(fallosX + 65, fallosY - 5);
-contexto.lineTo(fallosX + 65, fallosY + 45);
-contexto.stroke();
+        contexto.beginPath();
+        contexto.moveTo(fallosX + 65, fallosY - 5);
+        contexto.lineTo(fallosX + 65, fallosY + 45);
+        contexto.stroke();
 
-contexto.fillStyle = '#FFFFFF'; // Texto blanco
-contexto.fillText(fallos.toString(), fallosX + 30, fallosY + 25);
+        contexto.fillStyle = '#FFFFFF'; // Texto blanco
+        contexto.fillText(fallos.toString(), fallosX + 30, fallosY + 25);
             }
         }
     }

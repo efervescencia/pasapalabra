@@ -2,13 +2,14 @@
 <html>
 <head>
     <meta name="_csrf" th:content="${_csrf.token}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
     <div class="indexHeader"></div>
-    <br><br>
-
+    <br>
     <!-- HTML -->
+    <button id="musicButton" onclick="toggleMusic()"><i class="fas fa-volume-mute"></i></button>
     <div id="rosco">
         <canvas id="canvas_id" width="800" height="600"></canvas>
         <button id="playButton">Empezar!</button>
