@@ -9,16 +9,9 @@
         <p id="user-name"></p>
         <button id="edit-profile">Editar perfil</button>
     </div>
-    <table>
-        <tr>
-            <th>Username</th>
-            <th>Aciertos</th>
-        </tr>
-        <tr >
-            <td ></td>
-            <td ></td>
-        </tr>
-    </table>
+        <p>Bienvenido, <span th:text="${username}"></span>!</p>
+        <p>Has conseguido, <span th:text="${aciertos}" ></span> aciertos!</p>
+
     <button id="play-button">Jugar</button>
 </body>
 </html>

@@ -31,17 +31,18 @@ let musicOn = true;
 
 
 window.onload = function() {
-iniciar();
-document.getElementById('playButton').addEventListener('click', jugar);
 
-document.addEventListener('keydown', function(event) {
-    if (event.keyCode === 13) {
-        event.preventDefault();
-        // Inicia el ciclo de juego
-        cicloDeJuego();
-    }
-});
+    // Game initialization
+    iniciar();
+    document.getElementById('playButton').addEventListener('click', jugar);
 
+    document.addEventListener('keydown', function(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            // Inicia el ciclo de juego
+            cicloDeJuego();
+        }
+    });
 };
 
 function playMusic() {

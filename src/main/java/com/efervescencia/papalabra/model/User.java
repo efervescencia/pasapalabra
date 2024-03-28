@@ -14,6 +14,7 @@ public class User {
     private String username;
     private String password;
     private String role;
+    private Long aciertos;
 
     // Getters and setters
     public Long getId() {
@@ -48,6 +49,12 @@ public class User {
         this.role = role;
     }
 
+    public Long getAciertos() {
+        return aciertos;
+    }
 
+    public void setAciertos(Long aciertos) {
+        this.aciertos = aciertos;
+    }
 
 }

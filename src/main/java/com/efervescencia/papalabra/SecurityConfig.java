@@ -39,11 +39,10 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                     .requestMatchers(HttpMethod.GET, "/", "/index", "/jugar","/rosco", "/css/**", "/js/**", "/imagenes/**", "/mp3/**")
                     .permitAll() // Allow access to index.html
                     .requestMatchers(HttpMethod.POST, "/comprobarRespuesta").permitAll() // Allow POST requests to /comprobarRespuesta
-                    .requestMatchers(HttpMethod.GET, "/home").authenticated() // Require authentication for home.html
+                    .requestMatchers(HttpMethod.GET, "/home", "/jugars", "/user").authenticated() // Require authentication for home.html
                     .anyRequest().authenticated()
             )
             .formLogin()
-                .loginPage("/jugar") // Specify your login page here
                 .defaultSuccessUrl("/home", true)
                 .permitAll();
         return http.build();
