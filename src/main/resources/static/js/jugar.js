@@ -301,12 +301,17 @@ function iniciar(){
         contexto.textBaseline = "middle";
         contexto.fillText("Tiempo agotado", elemento.width / 2, elemento.height / 2);
         
-            // Pregunta al usuario si quiere jugar otra vez
+        // Pregunta al usuario si quiere jugar otra vez
         var jugarOtraVez = confirm("¿Quieres jugar otra vez?");
         if (jugarOtraVez) {
             // Reinicia el juego
-            // (necesitarás implementar esta función tú mismo)
             iniciar();
+        }
+        else {
+            // Después de 2 segundos (2000 milisegundos), redirigir a la página de records
+            setTimeout(function() {
+            window.location.href = '/';
+            }, 2000);
             }
         }
         
