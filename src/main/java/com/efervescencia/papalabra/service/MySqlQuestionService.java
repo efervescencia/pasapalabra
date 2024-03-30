@@ -5,15 +5,22 @@ import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.efervescencia.papalabra.model.Question;
 import com.efervescencia.papalabra.repository.QuestionRepository;
 
 @Service
-public class QuestionService {
+@Profile("mysql")
+public class MySqlQuestionService implements IQuestionService{
     @Autowired
     private QuestionRepository questionRepository;
+
+    @Autowired
+    public MySqlQuestionService(QuestionRepository questionRepository) {
+        this.questionRepository = questionRepository;
+    }
 
     public Question getRandomQuestionByLetter(String letter) {
         List<Question> questions = questionRepository.findByLetra(letter.toLowerCase());
