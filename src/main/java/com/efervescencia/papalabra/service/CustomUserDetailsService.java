@@ -10,14 +10,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.efervescencia.papalabra.repository.UserRepository;
+import com.efervescencia.papalabra.repository.IUserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final IUserRepository userRepository;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
+    public CustomUserDetailsService(IUserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

@@ -14,21 +14,29 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.efervescencia.papalabra.model.Score;
 import com.efervescencia.papalabra.model.User;
-import com.efervescencia.papalabra.repository.ScoreRepository;
-import com.efervescencia.papalabra.repository.UserRepository;
+import com.efervescencia.papalabra.repository.IScoreRepository;
+import com.efervescencia.papalabra.repository.IUserRepository;
 
 @Controller
 public class HomeController {
 
     @Autowired
-    private ScoreRepository scoreRepository;
+    private IScoreRepository scoreRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private IUserRepository userRepository;
 
     @GetMapping("/")
     public String index(Model model) {
         List<Score> topScores = scoreRepository.findTop10ByOrderByScoreDesc();
+        if(topScores.size() == 0) {
+            topScores.add(new Score("June", 3827, null));
+            topScores.add(new Score("David", 2127, null));
+            topScores.add(new Score("Julio", 2001, null));
+            topScores.add(new Score("Sonia", 1977, null));
+            topScores.add(new Score("El Rey", 27, null));
+            topScores.add(new Score("San Mamés", 10, null));
+        }
         model.addAttribute("topScores", topScores);
         return "index";
     }
