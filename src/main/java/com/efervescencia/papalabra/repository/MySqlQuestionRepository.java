@@ -1,5 +1,6 @@
 package com.efervescencia.papalabra.repository;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,7 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface QuestionRepository extends JpaRepository<Question, Integer> {
+@Profile("mysql")
+public interface MySqlQuestionRepository extends JpaRepository<Question, Integer>, IQuestionRepository {
     List<Question> findByLetra(String letra);
 
     @Query("SELECT q FROM Question q WHERE q.id = :id")

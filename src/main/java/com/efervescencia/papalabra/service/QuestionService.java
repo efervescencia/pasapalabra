@@ -5,20 +5,18 @@ import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.efervescencia.papalabra.model.Question;
-import com.efervescencia.papalabra.repository.QuestionRepository;
+import com.efervescencia.papalabra.repository.IQuestionRepository;
 
 @Service
-@Profile("mysql")
-public class MySqlQuestionService implements IQuestionService{
-    @Autowired
-    private QuestionRepository questionRepository;
+public class QuestionService{
+
+    private final IQuestionRepository questionRepository;
 
     @Autowired
-    public MySqlQuestionService(QuestionRepository questionRepository) {
+    public QuestionService(IQuestionRepository questionRepository) {
         this.questionRepository = questionRepository;
     }
 

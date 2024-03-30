@@ -19,13 +19,8 @@ import com.efervescencia.papalabra.service.QuestionService;
 @RestController
 public class QuestionController {
 
-
-    private final QuestionService questionService;
-
     @Autowired
-    public QuestionController(QuestionService questionService) {
-        this.questionService = questionService;
-    }
+    private QuestionService questionService;
 
 
     @GetMapping("/rosco")
