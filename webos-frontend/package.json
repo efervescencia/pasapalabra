@@ -1,0 +1,1 @@
+{\n  "name": "pasapalabra-webos",\n  "version": "1.0.0",\n  "description": "WebOS frontend for the Pasapalabra game",\n  "scripts": {\n    "start": "node index.js"\n  },\n  "dependencies": {\n    "express": "^4.17.1"\n  }\n}
